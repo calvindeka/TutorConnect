@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "tutorconnect",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["index.js"],
+      "port": 4131,
+      "cwd": "server"
+    }
+  ]
+}
