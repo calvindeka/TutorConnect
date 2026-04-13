@@ -3,9 +3,12 @@ import axios from "axios";
 
 const AuthContext = createContext(null);
 
-// API instance — withCredentials sends session cookie automatically
+// In production, the React build is served by Express on the same origin
+// In dev, we proxy to localhost:4131
+const baseURL = import.meta.env.DEV ? "http://localhost:4131" : "";
+
 const API = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL,
   withCredentials: true,
 });
 

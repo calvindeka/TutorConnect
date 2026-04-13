@@ -22,7 +22,7 @@ mysql -u root < server/schema.sql
 
 Edit `server/.env` with your MariaDB credentials:
 ```
-PORT=5000
+PORT=4131
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
@@ -40,22 +40,19 @@ cd ../client && npm install
 
 ### 4. Start the app
 
-Terminal 1 — Backend:
+Build the frontend:
 ```bash
-cd server
-npm run dev
+cd client && npm run build
 ```
 
-Terminal 2 — Frontend:
+Start the server:
 ```bash
-cd client
-npm run dev
+cd ../server && npm start
 ```
 
 ### 5. Open in browser
 
-Frontend: http://localhost:5173
-Backend API: http://localhost:5000
+App: http://10.192.145.179:4131
 
 ## Demo Walkthrough
 
