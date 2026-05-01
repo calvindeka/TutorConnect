@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ToastProvider } from "./components/Toaster";
 import { Spinner } from "react-bootstrap";
 
 import HomePage from "./pages/HomePage";
@@ -12,6 +13,7 @@ import TutorProfilePage from "./pages/TutorProfilePage";
 import ApplyPage from "./pages/ApplyPage";
 import AvailabilityPage from "./pages/AvailabilityPage";
 import SessionDetailPage from "./pages/SessionDetailPage";
+import AccountSettingsPage from "./pages/AccountSettingsPage";
 
 function FullScreenSpinner() {
   return (
@@ -41,19 +43,22 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<PublicOnly><LoginPage /></PublicOnly>} />
-          <Route path="/register" element={<PublicOnly><RegisterPage /></PublicOnly>} />
-          <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
-          <Route path="/admin" element={<RequireAuth roles={["admin"]}><AdminDashboard /></RequireAuth>} />
-          <Route path="/tutors" element={<RequireAuth><TutorSearchPage /></RequireAuth>} />
-          <Route path="/tutors/:id" element={<RequireAuth><TutorProfilePage /></RequireAuth>} />
-          <Route path="/sessions/:id" element={<RequireAuth><SessionDetailPage /></RequireAuth>} />
-          <Route path="/apply" element={<RequireAuth><ApplyPage /></RequireAuth>} />
-          <Route path="/availability" element={<RequireAuth roles={["tutor", "admin"]}><AvailabilityPage /></RequireAuth>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <ToastProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<PublicOnly><LoginPage /></PublicOnly>} />
+            <Route path="/register" element={<PublicOnly><RegisterPage /></PublicOnly>} />
+            <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth roles={["admin"]}><AdminDashboard /></RequireAuth>} />
+            <Route path="/tutors" element={<RequireAuth><TutorSearchPage /></RequireAuth>} />
+            <Route path="/tutors/:id" element={<RequireAuth><TutorProfilePage /></RequireAuth>} />
+            <Route path="/sessions/:id" element={<RequireAuth><SessionDetailPage /></RequireAuth>} />
+            <Route path="/apply" element={<RequireAuth><ApplyPage /></RequireAuth>} />
+            <Route path="/availability" element={<RequireAuth roles={["tutor", "admin"]}><AvailabilityPage /></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><AccountSettingsPage /></RequireAuth>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );

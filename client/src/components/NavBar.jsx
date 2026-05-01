@@ -67,6 +67,9 @@ export default function NavBar() {
                 id="tc-user-menu"
               >
                 <NavDropdown.Item as={Link} to="/dashboard">Dashboard</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/settings">
+                  <i className="bi bi-gear me-2" />Account settings
+                </NavDropdown.Item>
                 {user.role === "student" && (
                   <NavDropdown.Item as={Link} to="/apply">Become a Tutor</NavDropdown.Item>
                 )}
