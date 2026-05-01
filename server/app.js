@@ -64,20 +64,18 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// Serve React frontend (production build) — single-port architecture per the scaffold spec
-const clientDist = path.join(__dirname, "..", "client", "dist");
-app.use(express.static(clientDist));
-app.get(/.*/, (req, res, next) => {
-  if (req.path.startsWith("/api/")) return next();
-  res.sendFile(path.join(clientDist, "index.html"));
+// JSON 404 for any unmatched /api/* route — must come BEFORE the static + SPA fallback
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "Not found" });
 });
 
-// JSON 404 for unknown API routes
+// Serve the React build — single-port architecture per the scaffold spec
+const clientDist = path.join(__dirname, "..", "client", "dist");
+app.use(express.static(clientDist));
+
+// SPA fallback: any non-API GET that didn't match a static file gets index.html
 app.use((req, res) => {
-  if (req.path.startsWith("/api/")) {
-    return res.status(404).json({ error: "Not found" });
-  }
-  res.status(404).send("Not found");
+  res.sendFile(path.join(clientDist, "index.html"));
 });
 
 module.exports = app;
