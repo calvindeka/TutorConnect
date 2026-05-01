@@ -100,6 +100,61 @@ router.post("/logout", (req, res) => {
   });
 });
 
+// PATCH /api/auth/me — update own first/last name and (optional) profile image URL
+router.patch(
+  "/me",
+  requireAuth,
+  [
+    body("first_name").optional().trim().isLength({ min: 1, max: 100 }),
+    body("last_name").optional().trim().isLength({ min: 1, max: 100 }),
+    body("profile_image_url").optional({ nullable: true }).isURL().withMessage("Profile image must be a valid URL"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ error: errors.array()[0].msg });
+    const { first_name, last_name, profile_image_url } = req.body;
+    try {
+      await pool.query(
+        "UPDATE users SET first_name = COALESCE(?, first_name), last_name = COALESCE(?, last_name), profile_image_url = COALESCE(?, profile_image_url) WHERE id = ?",
+        [first_name ?? null, last_name ?? null, profile_image_url ?? null, req.user.id]
+      );
+      const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [req.user.id]);
+      req.session.user = sanitize(rows[0]);
+      res.json({ user: req.session.user });
+    } catch (err) {
+      console.error("Update profile error:", err);
+      res.status(500).json({ error: "Failed to update profile" });
+    }
+  }
+);
+
+// POST /api/auth/password — change own password
+router.post(
+  "/password",
+  requireAuth,
+  [
+    body("current_password").notEmpty().withMessage("Current password required"),
+    body("new_password").isLength({ min: 6 }).withMessage("New password must be at least 6 characters"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ error: errors.array()[0].msg });
+    const { current_password, new_password } = req.body;
+    try {
+      const [rows] = await pool.query("SELECT password_hash FROM users WHERE id = ?", [req.user.id]);
+      if (rows.length === 0) return res.status(404).json({ error: "User not found" });
+      const ok = await bcrypt.compare(current_password, rows[0].password_hash);
+      if (!ok) return res.status(401).json({ error: "Current password is incorrect" });
+      const hash = await bcrypt.hash(new_password, 10);
+      await pool.query("UPDATE users SET password_hash = ? WHERE id = ?", [hash, req.user.id]);
+      res.json({ message: "Password updated" });
+    } catch (err) {
+      console.error("Password change error:", err);
+      res.status(500).json({ error: "Failed to change password" });
+    }
+  }
+);
+
 // GET /api/auth/me — current authenticated user (incl. tutor profile if any)
 router.get("/me", requireAuth, async (req, res) => {
   try {
