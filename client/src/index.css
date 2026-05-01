@@ -1,34 +1,158 @@
-/* TutorConnect — small additions on top of Bootstrap */
+/* TutorConnect — design system tokens
+ * Earthy muted palette: sage primary, deep forest secondary, dusty terracotta accent.
+ * Warm paper neutrals. No multi-hue gradients. No emoji. No glassmorphism.
+ * Typography: Inter only. Single second-thought icon system: Bootstrap Icons.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --tc-brand: #1e2761;
-  --tc-brand-2: #408ec6;
-  --tc-accent: #7a2048;
-  --tc-bg: #f7f9fc;
+  /* ── BRAND COLORS — earthy muted palette ─────────────────────── */
+  --tc-brand:        #5a7a5a; /* muted sage — primary brand */
+  --tc-brand-deep:   #3d5a40; /* deep forest — primary on light, hover */
+  --tc-brand-2:      #8aa68a; /* light sage — soft fills, avatar mid-stop */
+  --tc-accent:       #c97b63; /* dusty terracotta — accent, CTAs that pop */
+  --tc-accent-deep:  #a85e48; /* deeper terracotta — hover */
+
+  /* Single subtle two-stop gradient, sage-only. No multi-hue gradients. */
+  --tc-brand-gradient: linear-gradient(135deg, #3d5a40 0%, #5a7a5a 100%);
+  --tc-hero-gradient:  linear-gradient(135deg, #3d5a40 0%, #5a7a5a 100%);
+
+  /* ── NEUTRALS (warm gray, brown-undertone) ────────────────────── */
+  --tc-bg:        #faf7f2; /* warm off-white / paper page bg */
+  --tc-surface:   #ffffff; /* card / nav background */
+  --tc-surface-2: #f3eee5; /* subtle sectioning, inputs filled */
+  --tc-border:    #e8e2d6; /* warm hairline borders */
+  --tc-fg:        #2a2622; /* warm near-black body text */
+  --tc-fg-muted:  #6b6357; /* warm gray secondary */
+  --tc-fg-subtle: #9a9080; /* warm gray tertiary / placeholder */
+  --tc-divider:   #d8d1c2;
+
+  /* ── SEMANTIC / STATUS COLORS (muted, paper-friendly) ────────── */
+  --tc-warn-bg:    #f5e7c8;
+  --tc-warn-fg:    #7a5a1f;
+  --tc-info-bg:    #dde5dc;
+  --tc-info-fg:    #3d5a40;
+  --tc-success-bg: #d8e3cc;
+  --tc-success-fg: #4a6238;
+  --tc-danger-bg:  #f1d9d0;
+  --tc-danger-fg:  #8a3a26;
+
+  /* Functional accents */
+  --tc-star:       #c97b63; /* terracotta replaces amber */
+  --tc-star-empty: #d8d1c2;
+
+  /* Typography scale */
+  --tc-font-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --tc-font-mono:    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --tc-tracking-tight: -0.5px;
+  --tc-tracking-wide:  0.5px;
+
+  /* Radius / shadow */
+  --tc-radius:      8px;
+  --tc-radius-lg:   14px;
+  --tc-radius-pill: 999px;
+  --tc-shadow-sm:   0 1px 2px rgba(15, 23, 42, 0.04);
+  --tc-shadow:      0 4px 12px rgba(15, 23, 42, 0.06);
+  --tc-shadow-lg:   0 12px 28px rgba(15, 23, 42, 0.10);
+  --tc-shadow-xl:   0 20px 50px rgba(15, 23, 42, 0.15);
+
+  /* ── BOOTSTRAP OVERRIDES ──────────────────────────────────────── */
+  /* Map bootstrap's primary onto sage so any react-bootstrap
+     `variant="primary"` button immediately respects the new brand. */
+  --bs-primary:        #5a7a5a;
+  --bs-primary-rgb:    90, 122, 90;
+  --bs-link-color:     #3d5a40;
+  --bs-link-color-rgb: 61, 90, 64;
+  --bs-link-hover-color: #2a4030;
+  --bs-body-color:     #2a2622;
+  --bs-body-bg:        #faf7f2;
+  --bs-border-color:   #e8e2d6;
 }
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
 html, body, #root { min-height: 100%; }
 body {
   background-color: var(--tc-bg);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: var(--tc-font-sans);
+  color: var(--tc-fg);
   -webkit-font-smoothing: antialiased;
-  color: #1f2937;
 }
 
+/* Bootstrap component overrides — keep them targeted so we don't fight the framework */
+.btn-primary {
+  --bs-btn-bg: var(--tc-brand);
+  --bs-btn-border-color: var(--tc-brand);
+  --bs-btn-hover-bg: var(--tc-brand-deep);
+  --bs-btn-hover-border-color: var(--tc-brand-deep);
+  --bs-btn-active-bg: var(--tc-brand-deep);
+  --bs-btn-active-border-color: var(--tc-brand-deep);
+  --bs-btn-disabled-bg: var(--tc-brand);
+  --bs-btn-disabled-border-color: var(--tc-brand);
+}
+.btn-outline-primary {
+  --bs-btn-color: var(--tc-brand-deep);
+  --bs-btn-border-color: var(--tc-brand);
+  --bs-btn-hover-bg: var(--tc-brand);
+  --bs-btn-hover-border-color: var(--tc-brand);
+  --bs-btn-active-bg: var(--tc-brand-deep);
+  --bs-btn-active-border-color: var(--tc-brand-deep);
+}
+/* Terracotta accent button — for the single "pop" CTA on the hero */
+.btn-accent {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--tc-accent);
+  --bs-btn-border-color: var(--tc-accent);
+  --bs-btn-hover-bg: var(--tc-accent-deep);
+  --bs-btn-hover-border-color: var(--tc-accent-deep);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: var(--tc-accent-deep);
+  --bs-btn-active-border-color: var(--tc-accent-deep);
+  --bs-btn-active-color: #fff;
+  color: #fff;
+}
+
+/* Form controls feel slightly warmer + match the paper bg */
+.form-control, .form-select {
+  border-color: var(--tc-border);
+  color: var(--tc-fg);
+  background-color: #fff;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--tc-brand);
+  box-shadow: 0 0 0 0.2rem rgba(90, 122, 90, 0.15);
+}
+
+/* Links */
+a { color: var(--tc-brand-deep); text-decoration: none; }
+a:hover { color: var(--tc-accent-deep); }
+.navbar a, .nav-link, .dropdown-item { color: inherit; }
+
+/* ── BRAND PRIMITIVES ─────────────────────────────────────────── */
 .tc-brand-gradient {
-  background: linear-gradient(135deg, var(--tc-brand) 0%, var(--tc-brand-2) 50%, var(--tc-accent) 100%);
-  color: white;
+  background: var(--tc-brand-gradient);
+  color: #fff;
+}
+.tc-brand-solid {
+  background: var(--tc-brand-deep);
+  color: #fff;
 }
 
 .tc-logo {
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: var(--tc-tracking-tight);
+  color: var(--tc-brand-deep);
 }
+/* When the logo sits inside a white-on-brand container (login/register hero),
+   let the parent's color win so we don't get dark text on dark sage. */
+.text-white .tc-logo,
+.tc-brand-gradient .tc-logo,
+.tc-hero .tc-logo { color: #fff; }
 
 .tc-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
+  background: var(--tc-surface);
+  border: 1px solid var(--tc-border);
+  border-radius: var(--tc-radius-lg);
 }
 
 .tc-tutor-card {
@@ -37,50 +161,126 @@ body {
 }
 .tc-tutor-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+  box-shadow: var(--tc-shadow-lg);
 }
 
 .tc-avatar {
   width: 48px; height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--tc-brand), var(--tc-brand-2));
-  color: white;
+  border-radius: var(--tc-radius-pill);
+  background: linear-gradient(135deg, var(--tc-brand-deep), var(--tc-brand-2));
+  color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
   font-weight: 700;
 }
 .tc-avatar-lg { width: 80px; height: 80px; font-size: 32px; }
 
-.tc-star { color: #f59e0b; }
-.tc-star-empty { color: #d1d5db; }
+/* Stars use terracotta now */
+.tc-star { color: var(--tc-star); }
+.tc-star-empty { color: var(--tc-star-empty); }
 
+/* ── STATUS / ROLE PILLS — muted, paper-friendly ─────────────── */
 .tc-status-pill {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 999px;
+  border-radius: var(--tc-radius-pill);
   font-size: .75rem;
   font-weight: 600;
   text-transform: capitalize;
 }
-.tc-status-requested { background: #fef3c7; color: #92400e; }
-.tc-status-confirmed { background: #dbeafe; color: #1e40af; }
-.tc-status-completed { background: #d1fae5; color: #065f46; }
-.tc-status-cancelled { background: #fee2e2; color: #991b1b; }
-.tc-status-pending  { background: #fef3c7; color: #92400e; }
-.tc-status-approved { background: #d1fae5; color: #065f46; }
-.tc-status-rejected { background: #fee2e2; color: #991b1b; }
+.tc-status-requested { background: var(--tc-warn-bg);    color: var(--tc-warn-fg); }
+.tc-status-confirmed { background: var(--tc-info-bg);    color: var(--tc-info-fg); }
+.tc-status-completed { background: var(--tc-success-bg); color: var(--tc-success-fg); }
+.tc-status-cancelled { background: var(--tc-danger-bg);  color: var(--tc-danger-fg); }
+.tc-status-pending   { background: var(--tc-warn-bg);    color: var(--tc-warn-fg); }
+.tc-status-approved  { background: var(--tc-success-bg); color: var(--tc-success-fg); }
+.tc-status-rejected  { background: var(--tc-danger-bg);  color: var(--tc-danger-fg); }
 
+/* Role badges (replace bootstrap badge bg-* with brand colors) */
+.badge.bg-secondary { background: var(--tc-fg-muted) !important; color: #fff; }
+.badge.bg-success   { background: var(--tc-brand)    !important; color: #fff; }
+.badge.bg-danger    { background: var(--tc-accent)   !important; color: #fff; }
+.badge.bg-info      { background: var(--tc-info-bg)  !important; color: var(--tc-info-fg) !important; }
+.badge.bg-warning   { background: var(--tc-warn-bg)  !important; color: var(--tc-warn-fg) !important; }
+
+/* ── HERO ─────────────────────────────────────────────────────── */
 .tc-hero {
-  background: linear-gradient(135deg, #1e2761 0%, #408ec6 100%);
-  color: white;
+  background: var(--tc-hero-gradient);
+  color: #fff;
   padding: 4rem 0;
   border-radius: 0 0 24px 24px;
 }
+.tc-hero h1, .tc-hero p { color: #fff; }
 
+/* ── STAT TILE (admin + dashboards) ──────────────────────────── */
 .tc-stat {
-  background: white;
-  border-radius: 14px;
+  background: var(--tc-surface);
+  border-radius: var(--tc-radius-lg);
   padding: 1.25rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--tc-border);
 }
-.tc-stat .num { font-size: 2rem; font-weight: 800; color: var(--tc-brand); }
-.tc-stat .label { color: #6b7280; font-size: .85rem; text-transform: uppercase; letter-spacing: .5px; }
+.tc-stat .num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--tc-brand-deep);
+  line-height: 1;
+}
+.tc-stat .label {
+  color: var(--tc-fg-muted);
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tc-tracking-wide);
+  margin-top: 6px;
+}
+
+/* Subject "tag" chips (used on tutor cards + search) */
+.tc-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #fff;
+  border: 1px solid var(--tc-border);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--tc-fg);
+}
+
+/* ── NAVBAR ───────────────────────────────────────────────────── */
+.navbar.bg-white {
+  background-color: var(--tc-surface) !important;
+  border-bottom-color: var(--tc-border) !important;
+}
+
+/* ── ALERTS — paper friendly ─────────────────────────────────── */
+.alert-danger {
+  background-color: var(--tc-danger-bg);
+  border-color: var(--tc-danger-bg);
+  color: var(--tc-danger-fg);
+}
+.alert-success {
+  background-color: var(--tc-success-bg);
+  border-color: var(--tc-success-bg);
+  color: var(--tc-success-fg);
+}
+.alert-warning {
+  background-color: var(--tc-warn-bg);
+  border-color: var(--tc-warn-bg);
+  color: var(--tc-warn-fg);
+}
+
+/* Toast variant overrides so success/danger toasts use the brand palette */
+.toast.bg-success { background-color: var(--tc-success-fg) !important; }
+.toast.bg-danger  { background-color: var(--tc-danger-fg)  !important; }
+.toast.bg-warning { background-color: var(--tc-warn-fg)    !important; color: #fff; }
+.toast.bg-info    { background-color: var(--tc-brand)      !important; color: #fff; }
+
+/* Tabs - use brand for active */
+.nav-tabs .nav-link.active {
+  color: var(--tc-brand-deep);
+  border-bottom-color: var(--tc-brand);
+}
+.nav-tabs .nav-link {
+  color: var(--tc-fg-muted);
+}
+.nav-tabs .nav-link:hover {
+  color: var(--tc-brand-deep);
+  border-color: transparent;
+}
