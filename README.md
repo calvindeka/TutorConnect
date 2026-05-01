@@ -1,5 +1,7 @@
 # TutorConnect
 
+[![CI](https://github.com/calvindeka/TutorConnect/actions/workflows/ci.yml/badge.svg)](https://github.com/calvindeka/TutorConnect/actions/workflows/ci.yml)
+
 A peer tutoring platform for Kenyon College students.
 **Final project — SCMP/COMP 318, Spring 2026 — Calvin Deka**
 
