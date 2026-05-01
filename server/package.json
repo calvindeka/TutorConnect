@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "db:schema": "mysql -u $DB_USER -p$DB_PASSWORD < schema.sql",
+    "db:schema": "mysql -u $DB_USER -p$DB_PASSWORD -D $DB_NAME < schema.sql",
     "db:seed": "node scripts/seed.js",
-    "db:reset": "npm run db:schema && npm run db:seed",
+    "db:reset": "mysql -u $DB_USER -p$DB_PASSWORD -e \"CREATE DATABASE IF NOT EXISTS $DB_NAME\" && npm run db:schema && npm run db:seed",
     "test": "vitest run",
     "test:watch": "vitest"
   },

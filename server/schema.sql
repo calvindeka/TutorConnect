@@ -1,10 +1,6 @@
--- TutorConnect Database Schema
--- MariaDB / MySQL
--- Drop and recreate is safe for development; in production we'd use migrations.
-
-CREATE DATABASE IF NOT EXISTS tutorconnect
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE tutorconnect;
+-- TutorConnect Database Schema (MariaDB / MySQL)
+-- Run with: mysql -u <user> -p -D <database> < schema.sql
+-- (database must already exist; create it manually with `CREATE DATABASE tutorconnect;` for local dev)
 
 -- Drop child tables first (FK constraints)
 DROP TABLE IF EXISTS reviews;
