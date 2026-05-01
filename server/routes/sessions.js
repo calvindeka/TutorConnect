@@ -11,7 +11,10 @@ const DAY_FROM_DATE = (dateStr) => {
   return days[d.getDay()];
 };
 
-const overlap = (aStart, aEnd, bStart, bEnd) => aStart < bEnd && bStart < aEnd;
+// Normalize TIME values so comparisons work between user input ("14:00") and
+// MariaDB-returned TIME values ("14:00:00").
+const t = (s) => (s || "").slice(0, 5);
+const overlap = (aStart, aEnd, bStart, bEnd) => t(aStart) < t(bEnd) && t(bStart) < t(aEnd);
 
 // POST /api/sessions — student requests a session
 router.post(
@@ -67,7 +70,7 @@ router.post(
         "SELECT start_time, end_time FROM availability WHERE tutor_profile_id = ? AND day_of_week = ?",
         [tutor_profile_id, day]
       );
-      const fits = avails.some((a) => a.start_time <= start_time && a.end_time >= end_time);
+      const fits = avails.some((a) => t(a.start_time) <= t(start_time) && t(a.end_time) >= t(end_time));
       if (!fits) {
         return res.status(400).json({ error: "Tutor is not available at that time" });
       }

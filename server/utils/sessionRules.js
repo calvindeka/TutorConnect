@@ -8,12 +8,17 @@ function dayFromDate(dateStr) {
   return DAYS[d.getDay()];
 }
 
+// Normalize HH:MM, HH:MM:SS to a comparable HH:MM string.
+function t(s) {
+  return (s || "").slice(0, 5);
+}
+
 function overlaps(aStart, aEnd, bStart, bEnd) {
-  return aStart < bEnd && bStart < aEnd;
+  return t(aStart) < t(bEnd) && t(bStart) < t(aEnd);
 }
 
 function fitsAvailability(start, end, slots) {
-  return slots.some((s) => s.start_time <= start && s.end_time >= end);
+  return slots.some((s) => t(s.start_time) <= t(start) && t(s.end_time) >= t(end));
 }
 
 function hasConflict(start, end, existingSessions) {

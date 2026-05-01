@@ -32,9 +32,7 @@ beforeAll(async () => {
   );
 });
 
-afterAll(async () => {
-  await pool.end();
-});
+// Pool is closed via the global afterAll in tests/teardown.mjs.
 
 describe("GET /api/health", () => {
   it("returns ok status and a timestamp", async () => {
