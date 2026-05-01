@@ -9,6 +9,7 @@
     "db:schema": "mysql -u $DB_USER -p$DB_PASSWORD -D $DB_NAME < schema.sql",
     "db:seed": "node scripts/seed.js",
     "db:reset": "mysql -u $DB_USER -p$DB_PASSWORD -e \"CREATE DATABASE IF NOT EXISTS $DB_NAME\" && npm run db:schema && npm run db:seed",
+    "db:test:setup": "mysql -u $DB_USER -p$DB_PASSWORD -e \"CREATE DATABASE IF NOT EXISTS tutorconnect_test\" && mysql -u $DB_USER -p$DB_PASSWORD -D tutorconnect_test < schema.sql",
     "test": "vitest run",
     "test:watch": "vitest"
   },

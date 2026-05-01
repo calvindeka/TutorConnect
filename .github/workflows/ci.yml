@@ -11,6 +11,31 @@ jobs:
     name: Backend + Frontend tests
     runs-on: ubuntu-latest
 
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: tutorconnect_test
+          MARIADB_USER: tutorconnect
+          MARIADB_PASSWORD: tutorconnect_test_pw
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      NODE_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      DB_USER: tutorconnect
+      DB_PASSWORD: tutorconnect_test_pw
+      DB_NAME: tutorconnect_test
+      SESSION_SECRET: ci-test-secret
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +49,17 @@ jobs:
             server/package-lock.json
             client/package-lock.json
 
+      - name: Install MariaDB client
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client
+
+      - name: Wait for MariaDB and load schema
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -u root -proot --silent; then break; fi
+            sleep 2
+          done
+          mysql -h 127.0.0.1 -u root -proot -D tutorconnect_test < server/schema.sql
+
       - name: Install backend dependencies
         working-directory: server
         run: npm ci
@@ -31,16 +67,6 @@ jobs:
       - name: Run backend tests
         working-directory: server
         run: npm test
-        env:
-          NODE_ENV: test
-          # Tests don't touch the DB, but app.js still loads dotenv. Provide
-          # a placeholder so the pool config validates.
-          DB_HOST: localhost
-          DB_PORT: "3306"
-          DB_USER: ci
-          DB_PASSWORD: ci
-          DB_NAME: tutorconnect
-          SESSION_SECRET: ci-secret
 
       - name: Install frontend dependencies
         working-directory: client
