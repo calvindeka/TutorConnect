@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { Card, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/Toaster";
 import { api, errorMessage } from "../api";
 
 export default function TutorDashboard() {
   const { user } = useAuth();
+  const toast = useToast();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -17,12 +19,14 @@ export default function TutorDashboard() {
   };
   useEffect(load, []);
 
+  const STATUS_LABEL = { confirmed: "confirmed", completed: "marked completed", cancelled: "cancelled" };
   const updateStatus = async (id, status) => {
     try {
       await api.patch(`/api/sessions/${id}/status`, { status });
+      toast.success(`Session ${STATUS_LABEL[status] || "updated"}`);
       load();
     } catch (err) {
-      setError(errorMessage(err, "Failed to update session"));
+      toast.error(errorMessage(err, "Failed to update session"));
     }
   };
 

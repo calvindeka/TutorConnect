@@ -4,6 +4,7 @@ import { Card, Row, Col, Badge, Button, Spinner, Alert, Form, Modal, Table } fro
 import Layout from "../components/Layout";
 import StarRating from "../components/StarRating";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/Toaster";
 import { api, errorMessage } from "../api";
 
 const DAY_LABEL = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
@@ -138,12 +139,14 @@ export default function TutorProfilePage() {
         onHide={() => setShowBook(false)}
         tutor={tutor}
         onBooked={(id) => { setShowBook(false); navigate(`/sessions/${id}`); }}
+        onError={(msg) => setShowBook(false) /* keep modal? handled by toast in modal */}
       />
     </Layout>
   );
 }
 
 function BookSessionModal({ show, onHide, tutor, onBooked }) {
+  const toast = useToast();
   const [form, setForm] = useState({
     subject_id: tutor.subjects[0]?.id || "",
     session_date: "",
@@ -171,6 +174,7 @@ function BookSessionModal({ show, onHide, tutor, onBooked }) {
         location: form.location || null,
         notes: form.notes || null,
       });
+      toast.success(`Request sent to ${tutor.first_name}!`);
       onBooked(data.id);
     } catch (err) {
       setError(errorMessage(err, "Could not book session"));

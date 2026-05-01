@@ -3,12 +3,14 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card, Button, Form, Alert, Spinner, Row, Col, Badge } from "react-bootstrap";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/Toaster";
 import { api, errorMessage } from "../api";
 import { StarPicker } from "../components/StarRating";
 
 export default function SessionDetailPage() {
   const { id } = useParams();
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,12 +36,14 @@ export default function SessionDetailPage() {
   const isStudent = session.student_id === user.id;
   const isTutor = session.tutor_user_id === user.id;
 
+  const STATUS_LABEL = { confirmed: "Session confirmed", completed: "Session marked completed", cancelled: "Session cancelled" };
   const updateStatus = async (status) => {
     try {
       await api.patch(`/api/sessions/${id}/status`, { status });
+      toast.success(STATUS_LABEL[status] || "Session updated");
       load();
     } catch (err) {
-      setError(errorMessage(err, "Failed to update session"));
+      toast.error(errorMessage(err, "Failed to update session"));
     }
   };
 
@@ -49,8 +53,9 @@ export default function SessionDetailPage() {
     try {
       await api.post("/api/reviews", { session_id: session.id, rating, comment: comment || null });
       setReviewSubmitted(true);
+      toast.success("Thanks for your review!");
     } catch (err) {
-      setError(errorMessage(err, "Failed to submit review"));
+      toast.error(errorMessage(err, "Failed to submit review"));
     } finally {
       setSubmitting(false);
     }
