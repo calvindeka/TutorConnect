@@ -96,7 +96,14 @@ export default function StudentDashboard() {
             <Card.Body>
               <h5 className="mb-3"><i className="bi bi-calendar-event me-2" />Upcoming sessions</h5>
               {upcoming.length === 0 ? (
-                <p className="text-muted small mb-0">No upcoming sessions yet. <Link to="/tutors">Book one</Link>.</p>
+                <div className="text-center py-4">
+                  <i className="bi bi-calendar2-x" style={{ fontSize: 36, color: "#9ca3af" }} />
+                  <p className="mt-2 mb-1 fw-semibold">No upcoming sessions</p>
+                  <p className="text-muted small mb-2">Find a tutor and book your first one.</p>
+                  <Button as={Link} to="/tutors" size="sm" variant="primary">
+                    <i className="bi bi-search me-1" />Browse tutors
+                  </Button>
+                </div>
               ) : (
                 upcoming.map((s) => <SessionRow key={s.id} session={s} />)
               )}
@@ -107,7 +114,7 @@ export default function StudentDashboard() {
             <Card.Body>
               <h5 className="mb-3"><i className="bi bi-clock-history me-2" />Past sessions</h5>
               {past.length === 0 ? (
-                <p className="text-muted small mb-0">No past sessions yet.</p>
+                <p className="text-muted small mb-0 text-center py-3">No past sessions yet.</p>
               ) : (
                 past.slice(0, 8).map((s) => <SessionRow key={s.id} session={s} />)
               )}
