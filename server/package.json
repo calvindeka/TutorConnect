@@ -1,15 +1,19 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "TutorConnect backend (Express + MariaDB + sessions)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:schema": "mysql -u $DB_USER -p$DB_PASSWORD < schema.sql",
+    "db:seed": "node scripts/seed.js",
+    "db:reset": "npm run db:schema && npm run db:seed",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Calvin Deka",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -19,7 +23,10 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
-    "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.22.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.5"
   }
 }

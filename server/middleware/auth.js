@@ -1,28 +1,25 @@
-const jwt = require("jsonwebtoken");
+// Session-based auth middleware. The Auth assignment explicitly says no JWT
+// requirement, and the existing scaffold already wires express-session.
 
-function authenticate(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "No token provided" });
+function requireAuth(req, res, next) {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: "Not authenticated" });
   }
-
-  const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch {
-    return res.status(401).json({ error: "Invalid or expired token" });
-  }
+  req.user = req.session.user;
+  next();
 }
 
-function authorize(...roles) {
+function requireRole(...roles) {
   return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ error: "Access denied" });
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ error: "Not authenticated" });
     }
+    if (!roles.includes(req.session.user.role)) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    req.user = req.session.user;
     next();
   };
 }
 
-module.exports = { authenticate, authorize };
+module.exports = { requireAuth, requireRole };

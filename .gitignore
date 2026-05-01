@@ -1,4 +1,26 @@
+# Dependencies
 node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+client/dist/
+
+# Test artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Environment files
 .env
-dist/
+server/.env
+
+# OS / editor
 .DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Logs
+npm-debug.log*
+*.log

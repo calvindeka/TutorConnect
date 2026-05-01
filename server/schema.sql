@@ -1,38 +1,56 @@
 -- TutorConnect Database Schema
--- MariaDB
+-- MariaDB / MySQL
+-- Drop and recreate is safe for development; in production we'd use migrations.
 
-CREATE DATABASE IF NOT EXISTS tutorconnect;
+CREATE DATABASE IF NOT EXISTS tutorconnect
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE tutorconnect;
 
--- Users table (simple for auth assignment)
-CREATE TABLE IF NOT EXISTS users (
+-- Drop child tables first (FK constraints)
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS availability;
+DROP TABLE IF EXISTS tutor_subjects;
+DROP TABLE IF EXISTS subjects;
+DROP TABLE IF EXISTS tutor_profiles;
+DROP TABLE IF EXISTS users;
+
+-- Users
+CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
-  name VARCHAR(200) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  role ENUM('student', 'tutor', 'admin') NOT NULL DEFAULT 'student',
+  profile_image_url VARCHAR(500) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_users_role (role)
 );
 
--- Tutor profiles (for later)
-CREATE TABLE IF NOT EXISTS tutor_profiles (
+-- Tutor profiles
+CREATE TABLE tutor_profiles (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL UNIQUE,
   bio TEXT NULL,
-  status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
   gpa DECIMAL(3,2) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_tutor_status (status)
 );
 
 -- Subjects
-CREATE TABLE IF NOT EXISTS subjects (
+CREATE TABLE subjects (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL UNIQUE,
-  category VARCHAR(100) NOT NULL
+  category VARCHAR(100) NOT NULL,
+  INDEX idx_subjects_category (category)
 );
 
 -- Tutor-Subject junction
-CREATE TABLE IF NOT EXISTS tutor_subjects (
+CREATE TABLE tutor_subjects (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tutor_profile_id INT NOT NULL,
   subject_id INT NOT NULL,
@@ -42,17 +60,19 @@ CREATE TABLE IF NOT EXISTS tutor_subjects (
 );
 
 -- Availability
-CREATE TABLE IF NOT EXISTS availability (
+CREATE TABLE availability (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tutor_profile_id INT NOT NULL,
   day_of_week ENUM('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun') NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
-  FOREIGN KEY (tutor_profile_id) REFERENCES tutor_profiles(id) ON DELETE CASCADE
+  FOREIGN KEY (tutor_profile_id) REFERENCES tutor_profiles(id) ON DELETE CASCADE,
+  INDEX idx_availability_tutor (tutor_profile_id),
+  INDEX idx_availability_day (day_of_week)
 );
 
 -- Sessions
-CREATE TABLE IF NOT EXISTS sessions (
+CREATE TABLE sessions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   student_id INT NOT NULL,
   tutor_profile_id INT NOT NULL,
@@ -60,47 +80,60 @@ CREATE TABLE IF NOT EXISTS sessions (
   session_date DATE NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
-  status ENUM('requested', 'confirmed', 'completed', 'cancelled') DEFAULT 'requested',
+  status ENUM('requested', 'confirmed', 'completed', 'cancelled') NOT NULL DEFAULT 'requested',
   location VARCHAR(255) NULL,
   notes TEXT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (student_id) REFERENCES users(id),
   FOREIGN KEY (tutor_profile_id) REFERENCES tutor_profiles(id),
-  FOREIGN KEY (subject_id) REFERENCES subjects(id)
+  FOREIGN KEY (subject_id) REFERENCES subjects(id),
+  INDEX idx_sessions_student (student_id),
+  INDEX idx_sessions_tutor (tutor_profile_id),
+  INDEX idx_sessions_status (status),
+  INDEX idx_sessions_date (session_date)
 );
 
 -- Reviews
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE reviews (
   id INT AUTO_INCREMENT PRIMARY KEY,
   session_id INT NOT NULL UNIQUE,
   student_id INT NOT NULL,
   tutor_profile_id INT NOT NULL,
-  rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  rating INT NOT NULL,
   comment TEXT NULL,
-  flagged BOOLEAN DEFAULT FALSE,
+  flagged BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CHECK (rating >= 1 AND rating <= 5),
   FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
   FOREIGN KEY (student_id) REFERENCES users(id),
-  FOREIGN KEY (tutor_profile_id) REFERENCES tutor_profiles(id) ON DELETE CASCADE
+  FOREIGN KEY (tutor_profile_id) REFERENCES tutor_profiles(id) ON DELETE CASCADE,
+  INDEX idx_reviews_tutor (tutor_profile_id),
+  INDEX idx_reviews_flagged (flagged)
 );
 
 -- Seed subjects
-INSERT IGNORE INTO subjects (name, category) VALUES
+INSERT INTO subjects (name, category) VALUES
   ('Calculus I', 'Mathematics'),
   ('Calculus II', 'Mathematics'),
   ('Linear Algebra', 'Mathematics'),
   ('Statistics', 'Mathematics'),
+  ('Discrete Math', 'Mathematics'),
   ('Intro to Computer Science', 'Computer Science'),
   ('Data Structures', 'Computer Science'),
   ('Algorithms', 'Computer Science'),
   ('Web Development', 'Computer Science'),
+  ('Software Engineering', 'Computer Science'),
   ('General Chemistry', 'Science'),
   ('Organic Chemistry', 'Science'),
   ('Physics I', 'Science'),
   ('Physics II', 'Science'),
   ('Biology I', 'Science'),
+  ('Biology II', 'Science'),
   ('English Composition', 'Humanities'),
   ('Technical Writing', 'Humanities'),
+  ('Spanish I', 'Languages'),
+  ('French I', 'Languages'),
   ('Microeconomics', 'Business'),
   ('Macroeconomics', 'Business'),
-  ('Accounting I', 'Business');
+  ('Accounting I', 'Business'),
+  ('Marketing Principles', 'Business');

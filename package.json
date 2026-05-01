@@ -1,13 +1,21 @@
 {
   "name": "tutorconnect",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TutorConnect — peer tutoring platform (Final project, SCMP 318)",
+  "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && node index.js",
+    "test:backend": "cd server && npm test",
+    "test:frontend": "cd client && npm test",
+    "test:e2e": "playwright test",
+    "test": "npm run test:backend && npm run test:frontend"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["react", "express", "mariadb", "bootstrap", "kenyon"],
+  "author": "Calvin Deka",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
 }
