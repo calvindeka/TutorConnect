@@ -50,7 +50,7 @@ I leaned on three habits:
 
 I'm the project manager, the architect, and the integrator. The AI is a very fast typist with broad pattern knowledge but no judgment about my project's specifics. Every meaningful decision — what tables to keep, what to cut from the MVP, how to structure the session state machine, when "good enough" is good enough — has to be mine. The work shifted from typing to deciding and verifying.
 
-The flip side is real: I was able to deliver a substantially larger, more polished application in one focused day than I could have without AI. The platform has 7 tables, ~25 API endpoints, 9 frontend pages, role-based auth, an AI feature with a fallback, 23 passing tests, and a CI/CD pipeline. That scope is only feasible because the AI handles the typing and I handle the thinking.
+The flip side is real: I was able to deliver a substantially larger, more polished application in one focused day than I could have without AI. The platform has 7 tables, ~25 API endpoints, 11 frontend pages, role-based auth, toast notifications, an AI feature with a deterministic fallback, 64 passing tests across three layers (44 backend integration + 12 frontend component + 8 end-to-end), and a working CI/CD pipeline with a real MariaDB service container. That scope is only feasible because the AI handles the typing and I handle the thinking.
 
 ## What I would do differently next time
 
