@@ -11,7 +11,7 @@ Live: <http://10.192.145.179:4131>
 
 ## 1. Project Overview
 
-**Purpose.** TutorConnect is a web platform that connects Kenyon students who need academic help with qualified peer tutors. The goal is to replace ad-hoc messaging and word-of-mouth referrals with a single, quality-controlled place to find tutors, book sessions, and leave reviews.
+**Purpose.** TutorConnect is a web platform that connects Kenyon students with peer tutors for **scheduled** tutoring across **every** subject. It complements the existing campus resources (the [Math and Science Skills Center](https://www.kenyon.edu/academics/advising-resources/math-science-skills-center/) for 100–200 level STEM, the Writing Center for writing) by filling the gaps those resources don't cover: subjects outside their scope (humanities, languages, upper-level courses, business), times outside their hours (the MSSC is open Sun/Tue/Thu 7–10 PM only), and a *scheduled by-name* model rather than drop-in. Students get to choose their tutor by subject specialty, availability, and public reviews; tutors get a clean way to publish their availability and a review-driven reputation.
 
 **Intended users.**
 - **Students** — search for tutors, request sessions, leave reviews after.

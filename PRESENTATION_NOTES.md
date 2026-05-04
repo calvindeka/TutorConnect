@@ -16,11 +16,11 @@ Move on. Don't linger.
 
 ## Slide 2 — Project Overview (60 seconds)
 
-> "The problem: tutoring at Kenyon is ad-hoc. People find tutors through word of mouth, group chats, scattered messages. There's no quality control, no easy way for tutors to publish availability, and no review system."
+> "Kenyon already has solid peer tutoring — the MSSC for STEM and the Writing Center for writing. But they're drop-in, scoped to specific subjects, and the MSSC only opens Sunday, Tuesday, and Thursday from 7 to 10 PM in Tomsich Hall. So for everything outside that — Spanish help, an upper-level CS class, accounting, an afternoon study session — students fall back to word of mouth and group chats."
 >
-> "TutorConnect solves that with three things: students can search for tutors and filter by subject and availability, they can book sessions through a request-confirm flow, and they leave reviews after — which feeds back into who shows up at the top of the list."
+> "TutorConnect fills that gap. It's a scheduled, by-name peer tutoring platform that complements the existing resources. Students search for tutors and filter by subject, day, and rating. They book through a request-confirm flow that validates availability and conflicts. They leave reviews after — which feeds back into who shows up at the top of the list."
 >
-> "It's built for three roles: students search and book; tutors apply, set availability, and accept requests; admins approve tutor applications and moderate reviews."
+> "Three roles: students search and book; tutors apply, set availability, accept requests; admins approve tutor applications and moderate reviews."
 
 ---
 
