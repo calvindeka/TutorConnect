@@ -39,3 +39,6 @@ Project_Proposals.pdf
 AI_Reflection.docx
 AI_Reflection.pdf
 TutorConnect_Presentation.pptx
+
+# Claude Code config (local only)
+.claude/
