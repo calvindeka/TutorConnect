@@ -24,3 +24,18 @@ server/.env
 # Logs
 npm-debug.log*
 *.log
+
+# Personal prep docs and exports — kept locally, not in the public repo
+DEMO_SCRIPT.md
+DEMO_SCRIPT.pdf
+PRESENTATION_NOTES.md
+PRESENTATION_NOTES.pdf
+PRESENTATION_GAMEPLAN.md
+PRESENTATION_GAMEPLAN.pdf
+MOODLE_SUBMISSION.md
+Project_Proposals.md
+Project_Proposals.docx
+Project_Proposals.pdf
+AI_Reflection.docx
+AI_Reflection.pdf
+TutorConnect_Presentation.pptx
